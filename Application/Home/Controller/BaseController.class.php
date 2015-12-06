@@ -2,7 +2,7 @@
 
 namespace Home\Controller;
 use Think\Controller;
-import(Org.Util.Token);
+import(Org.Util.BoxTokenHelper);
 class BaseController extends Controller{
 	protected $auth;
 	protected $token;
@@ -18,13 +18,13 @@ class BaseController extends Controller{
 		//检查token
 		$this->auth = I('param.auth');
 		//先检查auth
-		$token =  \Org\Util\TokenHelper::verifyAuth($this->auth);
+		$token =  \Org\Util\BoxTokenHelper::verifyAuth($this->auth);
 		if($token == false){
 	
 			$this->authFailed();
 		}
 		//调用token类验证
-		$tokenArray = \Org\Util\TokenHelper::verifyToken($token);
+		$tokenArray = \Org\Util\BoxTokenHelper::verifyToken($token);
 		if($tokenArray == false){
 	
 			$this->authFailed();
@@ -147,6 +147,7 @@ class BaseController extends Controller{
 		$this->AssignOwn('data',null);
 		$this->AssignOwn('token',$this->token);
 		$this->DisplayOwn('./result');
+		die();
 	}
 
 

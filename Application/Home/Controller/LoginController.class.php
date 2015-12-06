@@ -3,6 +3,7 @@
 namespace Home\Controller;
 use Think\Controller;
 import(Org.Util.Token);
+import(Org.Util.GibberishAES);
 
 class LoginController extends Controller{
 	var $result;
@@ -56,7 +57,12 @@ class LoginController extends Controller{
 			$this->AssignOwn('code',200);
 		else
 			$this->AssignOwn('code',201);
+		// $date = time();
+		// $auth = $token.'.'.$date;
+		// $enc = \Org\Util\GibberishAES::enc($token.':'.$date,'isayserious');
+		// $auth = $auth.'.'.$enc;
 		$this->AssignOwn('token',$token);
+
 		$this->DisplayOwn();
 	}
 }

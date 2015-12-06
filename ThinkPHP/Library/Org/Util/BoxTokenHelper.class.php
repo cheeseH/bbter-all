@@ -1,7 +1,6 @@
 <?php
 namespace Org\Util;
 
-import("GibberishAES");
 import("TokenInfo");
 function hexToStr($hex)//十六进制转字符串
 {   
@@ -10,7 +9,7 @@ function hexToStr($hex)//十六进制转字符串
 	$string.=chr(hexdec($hex[$i].$hex[$i+1]));
 	return  $string;
 }
-class TokenHelper{
+class BoxTokenHelper{
 	static private $expire = 604800;
 	public static function verifyToken($token){
 		$tokenString= hexToStr($token);
@@ -21,7 +20,7 @@ class TokenHelper{
 		}
 	
 		$created = $array['created'];
-		$expire = TokenHelper::$expire;
+		$expire = BoxTokenHelper::$expire;
 		$now = time();
 		if($created+$expire<$now)
 			return false;
@@ -37,8 +36,13 @@ class TokenHelper{
 		$token = $array[0];
 		$time = $array[1];
 		$sign = $array[2];
-		\Org\Util\GibberishAES::size(256);
-		$sign = GibberishAES::dec($sign,"isayserious");
+		$c = new \sodium\crypto();
+		$mysec = $c->keypair();
+		$mysec->load("d9e51b64202a4e5d45ae44aad312b2c800771d09f8335b8da664c9d8cc724345","858f393c6446da67e5c3913ec66a8de3c9293f76c0d63d432e6852102eb9418d",true);
+		$nonce = new \sodium\nonce();
+		$client_public = new \sodium\public_key();
+		$client_public->load("65a248a7e527d576d44b918cb3ae02303c9a206bfc2ec56cc135bb9e659e757c", true);
+		$sign = $c->box_open(hex2bin($sign),$nonce->set_nonce(hex2bin('565870a7000bd8466f83d97a04333245000067dd443bbb4b'),false),$client_public,$mysec);
 		$signArray = explode(":", $sign);
 		if(count($signArray)!=2)
 			return false;
