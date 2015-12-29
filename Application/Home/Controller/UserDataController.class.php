@@ -51,7 +51,7 @@ class UserDataController extends BaseController{
 		
 		$classstatus = '审核中';
 		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
-		if($noClassData['state']==0){
+		if($noClassData['state']==1){
 			$classStatus='已通过';
 		}else{
 			$classStatus='审核中';
@@ -68,11 +68,19 @@ class UserDataController extends BaseController{
 	//没课表的获取函数
 	private function getNoClass($userid){
 		$classStatus;
-		
-		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
+		$noClass=D('pitch_timetable');
+		$noClassData = $noClass->where(" userid = '$userid' ")->find();	
+		if($noClassData){
+			$newNoClassData=array(	
+						'userid' => $userid,
+						'state' => 0,
+						'table' => 0,
+						'newTable' => 0);
+			$noClass->data($noClassData)->add();
+		}
 		$transferInteger = (double)$noClassData['newTable'];
-	
-		if($noClassData['state']==0){
+		
+		if($noClassData['state']==1){
 			$classStatus='已通过';
 		}else{
 			$classStatus='审核中';
@@ -80,7 +88,7 @@ class UserDataController extends BaseController{
 		//将整数转换成数组
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
-		$this->setData('class',$transferClass);
+		$this->setData('noclass',$transferClass);
 		$this->setData('classstatus',$classstatus);
 		$this->code=200;
 		$this->finish();
@@ -107,7 +115,7 @@ class UserDataController extends BaseController{
 	
 		
 		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
-		if($noClassData['state']==0){
+		if($noClassData['state']==1){
 			$classStatus='已通过';
 		}else{
 			$classStatus='审核中';
@@ -120,7 +128,7 @@ class UserDataController extends BaseController{
 		//将整数转换成数组
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
-		$this->setData('class',$transferClass);
+		$this->setData('noclass',$transferClass);
 		
 		$this->code = 200;
 		$this->finish();
@@ -144,9 +152,9 @@ class UserDataController extends BaseController{
 		}
 		
 		$noClassData = D('pitch_timetable')->where(" userid = '$otherPersonId' ")->find();
-		$data = array(	'state' => 0,
+		$data = array(	'state' => 1,
 						'table' => $noClassData['newtable'],
-						'newTable' => 1);
+						);
 		D('pitch_timetable')->where(" userid=  '$otherPersonId' ")->save($data);
 		$data1 = array( 'classstatus' => 'NORMAL');
 		D('users')->where(" id = '$otherPersonId' ")->save($data1);
