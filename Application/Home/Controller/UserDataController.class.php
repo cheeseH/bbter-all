@@ -25,7 +25,7 @@ class UserDataController extends BaseController{
 								'timeTableId' => null,
 								'pitchTimes' => 0
 								);
-			$noClass->data($noClassData)->add();
+			$noClass->data($newUserData)->add();
 		}
 		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
