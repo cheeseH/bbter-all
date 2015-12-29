@@ -13,11 +13,20 @@ class UserDataController extends BaseController{
 		$pitchTimes;
 		$classstatus;
 		
+		
 		$User = D('user');
 		$userData = $User->find($id);
 		$noClass = D('pitch_user');
 		$noClassData = $noClass->where("userId = '$id'")->find();
-
+		if($noClassData){
+			$newUserData = array(
+								'userId' => $id,
+								'studentNumber' => student_number,
+								'timeTableId' => null,
+								'pitchTimes' => 0
+								);
+			$noClass->data($noClassData)->add();
+		}
 		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
 		
@@ -72,10 +81,11 @@ class UserDataController extends BaseController{
 		$noClassData = $noClass->where(" userid = '$userid' ")->find();	
 		if($noClassData){
 			$newNoClassData=array(	
-						'userid' => $userid,
-						'state' => 0,
-						'table' => 0,
-						'newTable' => 0);
+							'userid' => $userid,
+							'state' => 0,
+							'table' => 0,
+							'newTable' => 0,
+							);
 			$noClass->data($noClassData)->add();
 		}
 		$transferInteger = (double)$noClassData['newTable'];
@@ -152,8 +162,10 @@ class UserDataController extends BaseController{
 		}
 		
 		$noClassData = D('pitch_timetable')->where(" userid = '$otherPersonId' ")->find();
-		$data = array(	'state' => 1,
-						'table' => $noClassData['newtable'],
+		$data = array(	
+						'state' => 1,
+						'table' => $noClassData['newtable'
+],
 						);
 		D('pitch_timetable')->where(" userid=  '$otherPersonId' ")->save($data);
 		$data1 = array( 'classstatus' => 'NORMAL');
