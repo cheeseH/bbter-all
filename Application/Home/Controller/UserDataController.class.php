@@ -70,7 +70,7 @@ class UserDataController extends BaseController{
 		$classStatus;
 		
 		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
-		$transferInteger = (double)$noClassData['table'];
+		$transferInteger = (double)$noClassData['newTable'];
 	
 		if($noClassData['state']==0){
 			$classStatus='已通过';
