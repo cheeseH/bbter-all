@@ -6,10 +6,19 @@ class UserDataController extends BaseController{
 
 	//用户基本信息的获取函数
 	private function getUser($id){
+		$pitchTimes;
+		$position;
+		$department;
+		$sex;
+		$pitchTimes;
+		$classstatus;
+		
 		$User = D('user');
 		$userData = $User->find($id);
-		
-		$this->setData('name',$userData['name']);					//nam		
+		$noClass = D('pitch_user');
+		$noClassData = $noClass->where("userId = '$id'")->find();
+
+		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
 		
 		$positionData = D('groups')->find($this->groupId);				//position
@@ -36,63 +45,51 @@ class UserDataController extends BaseController{
 			break;
 		}
 		$this->setData('sex',$sex);
+		
 		$this->setData('tel',$userData['mobile']);						//长短号
 		$this->setData('shorttel', $userData['short_mobile']);
-		$classstatus = '已通过';
-		switch($userData['status']){
-			case 'NORMAL':
-				$classstatus = '已通过';
-				break;
-			
-			case 'RETIRED':
-				$classstatus = '退休';
-				break;
-			
-			case 'LEFT':
-				$classstatus = '离职';
-				break;
-			
-			default:
-			break;
+		
+		$classstatus = '审核中';
+		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
+		if($noClassData['state']==1){
+			$classStatus='已通过';
+		}else{
+			$classStatus='审核中';
 		}
+		
+		$pitchTimes = $noClassData['pitchTimes'];
+		
 		$this->setData('classstatus',$classstatus);
-		$this->setData('pitchnumber',1);		
+		$this->setData('pitchnumber',$pitchTimes);		
 		
 		$this->code = 200;
 		$this->finish();
 	}	
 	//没课表的获取函数
 	private function getNoClass($userid){
-
-		$User = D('user');
-		$userData = $User->find($id);
-		$classstatus;
-		switch($userData['status']){
-			case 'NORMAL':
-				$classstatus = '已通过';
-				break;
-			
-			case 'RETIRED':
-				$classstatus = '退休';
-				break;
-			
-			case 'LEFT':
-				$classstatus = '离职';
-				break;
-			
-			default:
-			break;
+		$classStatus;
+		$noClass=D('pitch_timetable');
+		$noClassData = $noClass->where(" userid = '$userid' ")->find();	
+		if($noClassData){
+			$newNoClassData=array(	
+						'userid' => $userid,
+						'state' => 0,
+						'table' => 0,
+						'newTable' => 0);
+			$noClass->data($noClassData)->add();
 		}
-		$this->setData('classstatus',$classstatus);
+		$transferInteger = (double)$noClassData['newTable'];
 		
-		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
-		$transferInteger = (double)$noClassData['table'];
-	
+		if($noClassData['state']==1){
+			$classStatus='已通过';
+		}else{
+			$classStatus='审核中';
+		}
 		//将整数转换成数组
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
-		$this->setData('class',$transferClass);
-
+		$this->setData('noclass',$transferClass);
+		$this->setData('classstatus',$classstatus);
 		$this->code=200;
 		$this->finish();
 
@@ -101,8 +98,9 @@ class UserDataController extends BaseController{
 	
 	//查看他人没课表的函数
 	private function getOtherPersonNoClass($userId){
-		
 		//查找基本信息
+		$userId;
+		$classstatus;	
 		$data = array();
 		
 		$userData = D('users')->where("student_number = $userId")->find();
@@ -115,23 +113,14 @@ class UserDataController extends BaseController{
 		$positionData = D('groups')->find($this->groupId);
 		$this->setData('position',$positionData['name']);
 	
-		$classstatus;
-		switch($userData['status']){
-			case 'NORMAL':
-				$classstatus = '已通过';
-				break;
-			
-			case 'RETIRED':
-				$classstatus = '退休';
-				break;
-			
-			case 'LEFT':
-				$classstatus = '离职';
-				break;
-			
-			default:
-				break;
+		
+		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
+		if($noClassData['state']==1){
+			$classStatus='已通过';
+		}else{
+			$classStatus='审核中';
 		}
+		
 		$this->setData('classstatus',$classstatus);
 		$noClassData = D('pitch_timetable')->where(" userid = '$userId' ")->find();
 		$transferInteger = (double)$noClassData['table'];
@@ -139,7 +128,7 @@ class UserDataController extends BaseController{
 		//将整数转换成数组
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
-		$this->setData('class',$transferClass);
+		$this->setData('noclass',$transferClass);
 		
 		$this->code = 200;
 		$this->finish();
@@ -147,6 +136,9 @@ class UserDataController extends BaseController{
 	
 	//审核他人没课表的函数
 	private function checkOtherPersonNoClass($scnumber){
+		$otherPersonId;
+		$studentDepartmentId;
+		
 		$otherPersonData = D('users')->where(" student_number =  $scnumber" )->find();
 		if(empty($otherPersonData)){
 			$this->dataNoFound($scnumber);
@@ -160,9 +152,9 @@ class UserDataController extends BaseController{
 		}
 		
 		$noClassData = D('pitch_timetable')->where(" userid = '$otherPersonId' ")->find();
-		$data = array(	'state' => 0,
+		$data = array(	'state' => 1,
 						'table' => $noClassData['newtable'],
-						'newTable' => 1);
+						);
 		D('pitch_timetable')->where(" userid=  '$otherPersonId' ")->save($data);
 		$data1 = array( 'classstatus' => 'NORMAL');
 		D('users')->where(" id = '$otherPersonId' ")->save($data1);
