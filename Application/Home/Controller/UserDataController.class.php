@@ -91,7 +91,7 @@ class UserDataController extends BaseController{
 		//将整数转换成数组
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
-		$this->setData('class',$transferClass);
+		$this->setData('noclass',$transferClass);
 
 		$this->code=200;
 		$this->finish();
@@ -187,7 +187,7 @@ class UserDataController extends BaseController{
 	
 	public function getNoClassData(){
 		$id = $this->userId;
-		$this->getNoClass();
+		$this->getNoClass($id);
 	}
 	
 	public function getUserData(){
