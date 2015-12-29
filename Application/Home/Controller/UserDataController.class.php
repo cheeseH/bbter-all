@@ -21,7 +21,7 @@ class UserDataController extends BaseController{
 		if($noClassData){
 			$newUserData = array(
 								'userId' => $id,
-								'studentNumber' => student_number,
+								'studentNumber' => $User['student_number'],
 								'timeTableId' => null,
 								'pitchTimes' => 0
 								);
