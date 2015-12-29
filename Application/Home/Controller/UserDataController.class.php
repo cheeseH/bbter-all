@@ -6,12 +6,12 @@ class UserDataController extends BaseController{
 
 	//用户基本信息的获取函数
 	private function getUser($id){
-		$pitchTimes;
+	
 		$position;
 		$department;
 		$sex;
 		$pitchTimes;
-		$classstatus;
+		$classStatus;
 		
 		
 		$User = D('user');
@@ -21,11 +21,15 @@ class UserDataController extends BaseController{
 		if($noClassData){
 			$newUserData = array(
 								'userId' => $id,
-								'studentNumber' => $User['student_number'],
+								'studentNumber' => $userData['student_number'],
 								'timeTableId' => null,
 								'pitchTimes' => 0
 								);
+								
+			$pitchTimes = 0;
 			$noClass->data($newUserData)->add();
+		}else{
+			$pitchTimes = $noClassData['pitchTimes'];
 		}
 		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
@@ -58,7 +62,7 @@ class UserDataController extends BaseController{
 		$this->setData('tel',$userData['mobile']);						//长短号
 		$this->setData('shorttel', $userData['short_mobile']);
 		
-		$classstatus = '审核中';
+		$classStatus = '审核中';
 		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
 		if($noClassData['state']==1){
 			$classStatus='已通过';
@@ -66,7 +70,6 @@ class UserDataController extends BaseController{
 			$classStatus='审核中';
 		}
 		
-		$pitchTimes = $noClassData['pitchTimes'];
 		
 		$this->setData('classstatus',$classStatus);
 		$this->setData('pitchnumber',$pitchTimes);		
