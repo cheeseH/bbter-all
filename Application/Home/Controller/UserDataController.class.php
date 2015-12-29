@@ -68,7 +68,7 @@ class UserDataController extends BaseController{
 		
 		$pitchTimes = $noClassData['pitchTimes'];
 		
-		$this->setData('classstatus',$classstatus);
+		$this->setData('classstatus',$classStatus);
 		$this->setData('pitchnumber',$pitchTimes);		
 		
 		$this->code = 200;
@@ -100,7 +100,7 @@ class UserDataController extends BaseController{
 		$transferClass=array();
 		$transferClass = getTransferClass($transferInteger);
 		$this->setData('noclass',$transferClass);
-		$this->setData('classstatus',$classstatus);
+		$this->setData('classstatus',$classStatus);
 		$this->code=200;
 		$this->finish();
 
