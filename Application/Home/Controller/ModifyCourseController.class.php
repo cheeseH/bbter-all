@@ -6,13 +6,17 @@ class ModifyCourseController  extends BaseController{
 
 	public function addDataToNewTable(){
 
-        //获取到的data数组变成整数
-        $timeInt=$this->changeArrayIntoInt($this->checkNotEmptyAndGetParam('class'));
-		$timetable = D('pitch_timetable');
-		$courseData= $timetable->where('userid=$this->userid')->setField(array('newtable','state'),array('$timeInt',0));
-        
-		$this->code = 200;
-		$this->finish();
+	        $timeInt=$this->changeArrayIntoInt(json_decode($this->checkNotEmptyAndGetParam('noclass')));
+			$timetable = D('pitch_timetable');
+			$update = array();
+			$update['newTable'] = $timeInt;
+			$update['state'] = 0;
+			$id = $this->userId;
+			$timetable->where("userid=$id")->save($update);
+	        
+			$this->code = 200;
+			$this->finish();
+
 	}
 
 	private function changeArrayIntoInt($class){
@@ -34,7 +38,7 @@ class ModifyCourseController  extends BaseController{
 		}
 	} 
 	return  $transferInteger;
-    echo "change 函数的调用";
+    	echo "change 函数的调用";
 
     }
 

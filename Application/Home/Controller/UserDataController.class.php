@@ -77,6 +77,7 @@ class UserDataController extends BaseController{
 	//没课表的获取函数
 	private function getNoClass($userid){
 		$classStatus;
+
 		$noClass=D('pitch_timetable');
 		$noClassData = $noClass->where(" userid = '$userid' ")->find();	
 		if($noClassData){
@@ -191,7 +192,7 @@ class UserDataController extends BaseController{
 	
 	public function getNoClassData(){
 		$id = $this->userId;
-		$this->getNoClass();
+		$this->getNoClass($id);
 	}
 	
 	public function getUserData(){
