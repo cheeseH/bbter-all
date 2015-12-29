@@ -20,24 +20,13 @@ class UserDataController extends BaseController{
 		$noClassData = $noClass->where("userId = '$id'")->find();
 		if(!$noClassData){
 			$newUserData = array(
-<<<<<<< HEAD
-								'userId' => $id,
-								'studentNumber' => $userData['student_number'],
-								'timeTableId' => null,
-								'pitchTimes' => 0
-								);
-								
-			$pitchTimes = 0;
-=======
-
 				'userId' => $id,
 				'studentNumber' => $userData['student_number'],
 				'timeTableId' => null,
 				'pitchTimes' => 0
 			);
-
->>>>>>> 85a29d87530c4337d115a73cb7d17c41fd322f6d
 			$noClass->data($newUserData)->add();
+			$pitchTimes = 0;
 		}else{
 			$pitchTimes = $noClassData['pitchTimes'];
 		}
