@@ -71,7 +71,7 @@ class UserDataController extends BaseController{
 
 		$noClass=D('pitch_timetable');
 		$noClassData = $noClass->where(" userid = '$userid' ")->find();	
-		if($noClassData){
+		if(!$noClassData){
 			$newNoClassData=array(	
 						'userid' => $userid,
 						'state' => 0,
@@ -79,7 +79,7 @@ class UserDataController extends BaseController{
 						'newTable' => 0);
 			$noClass->data($noClassData)->add();
 		}
-		$transferInteger = (double)$noClassData['newTable'];
+		$transferInteger = (double)$noClassData['newtable'];
 		
 		if($noClassData['state']==1){
 			$classStatus='已通过';
@@ -181,6 +181,7 @@ class UserDataController extends BaseController{
 	public function getNoClassData(){
 		$id = $this->userId;
 		$this->getNoClass($id);
+
 	}
 	
 	public function getUserData(){
@@ -191,3 +192,4 @@ class UserDataController extends BaseController{
 
 }
 ?>
+	
