@@ -20,11 +20,13 @@ class UserDataController extends BaseController{
 		$noClassData = $noClass->where("userId = '$id'")->find();
 		if(!$noClassData){
 			$newUserData = array(
+
 				'userId' => $id,
 				'studentNumber' =>$student_number,
 				'timeTableId' => null,
 				'pitchTimes' => 0
 				);
+
 			$noClass->data($newUserData)->add();
 		}
 		$this->setData('name',$userData['name']);					//name	
