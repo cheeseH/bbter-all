@@ -16,6 +16,7 @@ class ModifyCourseController  extends BaseController{
 	        
 			$this->code = 200;
 			$this->finish();
+
 	}
 
 	private function changeArrayIntoInt($class){
