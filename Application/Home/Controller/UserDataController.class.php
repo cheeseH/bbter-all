@@ -18,14 +18,14 @@ class UserDataController extends BaseController{
 		$userData = $User->find($id);
 		$noClass = D('pitch_user');
 		$noClassData = $noClass->where("userId = '$id'")->find();
-		if($noClassData){
+		if(!$noClassData){
 			$newUserData = array(
-								'userId' => $id,
-								'studentNumber' => student_number,
-								'timeTableId' => null,
-								'pitchTimes' => 0
-								);
-			$noClass->data($noClassData)->add();
+				'userId' => $id,
+				'studentNumber' =>$student_number,
+				'timeTableId' => null,
+				'pitchTimes' => 0
+				);
+			$noClass->data($newUserData)->add();
 		}
 		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
