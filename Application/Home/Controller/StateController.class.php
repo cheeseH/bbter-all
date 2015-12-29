@@ -67,12 +67,11 @@ class StateController  extends BaseController{
 			$name=$value['name'];
 			$position=$value['group_id'];
 			$pitch_user=D('pitch_user');
-			if ($pitch_user->find()) {
+			if (!$pitch_user->where("userId = $value['id']")->find()) {
 				$data=array();
-				$data['id']=0;
-				$data['userId']=0;
-				$data['studentNumber']=0;
-				$data['timeTableId']=0;
+				$data['userId']=$value['id'];
+				$data['studentNumber']=$value['student_number'];
+				$data['timeTableId']=NULL;
 				$data['pitchTimes']=0;
 				$pitch_user->add($data);
 
