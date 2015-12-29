@@ -131,7 +131,7 @@ class UserDataController extends BaseController{
 			$classStatus='审核中';
 		}
 		
-		$this->setData('classstatus',$classstatus);
+		$this->setData('classstatus',$classStatus);
 		$noClassData = D('pitch_timetable')->where(" userid = '$userId' ")->find();
 		$transferInteger = (double)$noClassData['table'];
 
