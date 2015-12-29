@@ -1,9 +1,18 @@
 <?php
+//摆摊状态
 namespace Home\Controller;
 use Think\Controller;
 import('ORG.Util.Page');
 class StateController  extends BaseController{
-
+    public function authJuge(){
+    	if ($this->groupId==3) {
+    		$this->selectPitchState();
+    		# code...
+    	}else{
+    		$this->forbidden();
+    		
+    	}
+    }
 	public function selectPitchState(){
 
 		$kind=$this->checkNotEmptyAndGetParam('kind');
@@ -11,6 +20,7 @@ class StateController  extends BaseController{
 		$pageeach=$this->checkNotEmptyAndGetParam('pageeach');
 		$users=D('users');
 		$departmentUserId=$this->departmentId;
+
 		switch ($kind) {
 			case '全部':
 			    //$kind=0;
@@ -57,7 +67,19 @@ class StateController  extends BaseController{
 			$name=$value['name'];
 			$position=$value['group_id'];
 			$pitch_user=D('pitch_user');
+			if ($pitch_user->find()) {
+				$data=array();
+				$data['id']=0;
+				$data['userId']=0;
+				$data['studentNumber']=0;
+				$data['timeTableId']=0;
+				$data['pitchTimes']=0;
+				$pitch_user->add($data);
+
+				# code...
+			}
 			$pitchUserData=$pitch_user->where(array('studentNumber'=>$scnumber))->select();
+		
 			$pitchUserId=$pitchUserData['userId'];
 			$pitchnumber=$pitchUserData['pitchTimes'];
 			$pitch_timetable=D('pitch_timetable');

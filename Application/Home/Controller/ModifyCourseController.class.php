@@ -6,9 +6,10 @@ class ModifyCourseController  extends BaseController{
 
 	public function addDataToNewTable(){
 
-        //获取到的data数组变成整数
+        //获取到的data数组中的class变成整数
         $timeInt=$this->changeArrayIntoInt($this->checkNotEmptyAndGetParam('class'));
 		$timetable = D('pitch_timetable');
+		//把用来代表没课表信息的timeInt和未审核的状态写入到数据表中
 		$courseData= $timetable->where('userid=$this->userid')->setField(array('newtable','state'),array('$timeInt',0));
         
 		$this->code = 200;
