@@ -22,10 +22,10 @@ class UserDataController extends BaseController{
 			$newUserData = array(
 
 				'userId' => $id,
-				'studentNumber' =>$student_number,
+				'studentNumber' => $userData['student_number'],
 				'timeTableId' => null,
 				'pitchTimes' => 0
-				);
+			);
 
 			$noClass->data($newUserData)->add();
 		}
