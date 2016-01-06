@@ -26,7 +26,7 @@ class TestController extends Controller {
                         $pitch_timetable = D('pitch_timetable');
                         $tableData['table'] = 0;
                         $tableData['newTable'] = 0;
-                        $tableData['userid'] = $userid;
+                        $tableData['userid'] = $usrid;
                         $tableData['state'] = 1;
                         $ttid = $pitch_timetable->data($tableData)->add();
                         $newdata['timeTableId'] = $ttid;

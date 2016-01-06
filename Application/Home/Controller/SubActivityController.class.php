@@ -361,7 +361,7 @@ private function pitchassign($pitch){
 	$lessionInWeek = ($lession-1)*7+$day;
 	$init = 1;
 	$init<<=$lessionInWeek;
-	$userData = $ass->field("u.id")->table("users u,departments dprt,pitch_timetable tt,pitch_user pu")->where("(tt.table&$init=0) AND tt.userId=u.id AND u.department_id=dprt.id AND u.id = pu.userid")->order("pu.pitchTimes desc")->limit($pitch['neednumber'])->select();
+	$userData = $ass->field("u.id")->table("users u,departments dprt,pitch_timetable tt,pitch_user pu")->where("(tt.table&$init=0) AND tt.userId=u.id AND u.department_id=dprt.id AND u.id = pu.userid AND u.completed = 1 AND u.status = 'NORMAL'")->order("pu.pitchTimes desc")->limit($pitch['neednumber'])->select();
 	foreach ($userData as $key => $value) {
 		# code...
 		$data['userId'] = $value['id'];
