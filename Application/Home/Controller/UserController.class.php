@@ -171,7 +171,7 @@ class UserController  extends BaseController{
 	}
 
 	public function batchAdd(){
-		$userArray = explode("\n", $this->checkNotEmptyAndGetParam('studentno'));
+		$userArray = explode(".", $this->checkNotEmptyAndGetParam('studentno'));
 		$groupName = $this->checkNotEmptyAndGetParam('position');
 		$group = D('groups');
 		$user = D('users');
@@ -199,7 +199,20 @@ class UserController  extends BaseController{
 			$userData['department_id'] = $this->departmentId;
 			$userData['student_number'] = $value;
 			$userData['password'] = md5($value);
-			$user->data($userData)->add();
+			$userid = $user->data($userData)->add();
+			$pitch_user = D('pitch_user');
+			$data['pitchTimes'] = 0;
+			$data['userId'] = $userid;
+			$puId = $pitch_user->data($data)->add();
+			$pitch_timetable = D('pitch_timetable');
+			$tableData['table'] = 0;
+			$tableData['newTable'] = 0;
+			$tableData['userid'] = $userid;
+			$tableData['state'] = 1;
+			$ttid = $pitch_timetable->data($tableData)->add();
+			$newdata['timeTableId'] = $ttid;
+			$pitch_user->where("id = $puId")->save($newdata);
+
 
 		}
 		if(!$failed)

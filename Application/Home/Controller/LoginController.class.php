@@ -39,6 +39,15 @@ class LoginController extends Controller{
 			$this->DisplayOwn();
 			die();
 		}
+		if($data['status'] != 'NORMAL'){
+			$this->AssignOwn('code',102);
+			$this->AssignOwn('info','用户名不存在');
+			$this->AssignOwn('data',null);
+			$this->AssignOwn('token',null);
+			$this->DisplayOwn();
+			die();
+		}
+			
 		if($data['password'] != $password){
 			$this->AssignOwn('code',103);
 			$this->AssignOwn('info','密码错误');

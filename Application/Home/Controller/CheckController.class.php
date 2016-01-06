@@ -4,6 +4,8 @@ use Think\Controller;
 class CheckController  extends BaseController{
 
 	public function checkTimeTable(){
+		if($this->groupId<3)
+			$this->forbidden();
 		$timeUserId=$this->checkNotEmptyAndGetParam('id');
 		if ($this->userId==3) {
 			$pitch_timetable=D('pitch_timetable');

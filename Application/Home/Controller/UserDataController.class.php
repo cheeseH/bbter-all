@@ -28,7 +28,8 @@ class UserDataController extends BaseController{
 			$noClass->data($newUserData)->add();
 			$pitchTimes = 0;
 		}else{
-			$pitchTimes = $noClassData['pitchTimes'];
+			$pitchTimes = (int)$noClassData['pitchtimes'];
+
 		}
 		$this->setData('name',$userData['name']);					//name	
 		$this->setData('photo','');
@@ -71,7 +72,7 @@ class UserDataController extends BaseController{
 		
 		
 		$this->setData('classstatus',$classStatus);
-		$this->setData('pitchnumber',$pitchTimes);		
+		$this->setData('pitchnumber',$pitchTimes,0);		
 		
 		$this->code = 200;
 		$this->finish();
@@ -127,16 +128,16 @@ class UserDataController extends BaseController{
 		$this->setData('position',$positionData['name']);
 	
 		
-		$noClassData = D('pitch_timetable')->where(" userid = '$userid' ")->find();	
+		$noClassData = D('pitch_timetable')->where(" userid = '$userId' ")->find();	
 		if($noClassData['state']==1){
-			$classStatus='已通过';
+			$classStatus='已审核';
 		}else{
-			$classStatus='审核中';
+			$classStatus='未审核';
 		}
 		
 		$this->setData('classstatus',$classStatus);
 		$noClassData = D('pitch_timetable')->where(" userid = '$userId' ")->find();
-		$transferInteger = (double)$noClassData['table'];
+		$transferInteger = (double)$noClassData['newtable'];
 
 		//将整数转换成数组
 		$transferClass=array();
@@ -167,12 +168,11 @@ class UserDataController extends BaseController{
 		$noClassData = D('pitch_timetable')->where(" userid = '$otherPersonId' ")->find();
 		$data = array(	
 						'state' => 1,
-						'table' => $noClassData['newtable'
-],
+						'table' => $noClassData['newtable'],
 						);
 		D('pitch_timetable')->where(" userid=  '$otherPersonId' ")->save($data);
-		$data1 = array( 'classstatus' => 'NORMAL');
-		D('users')->where(" id = '$otherPersonId' ")->save($data1);
+		// $data1 = array( 'classstatus' => 'NORMAL');
+		// D('users')->where(" id = '$otherPersonId' ")->save($data1);
 		
 		$this->code = 200;
 		$this->finish();
