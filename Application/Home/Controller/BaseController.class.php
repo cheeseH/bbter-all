@@ -18,12 +18,13 @@ class BaseController extends Controller{
 		//检查token
 		$this->auth = I('param.auth');
 		//先检查auth
-		$token =  \Org\Util\BoxTokenHelper::verifyAuth($this->auth);
-		if($token == false){
+		// $token =  \Org\Util\BoxTokenHelper::verifyAuth($this->auth);
+		// if($token == false){
 	
-			$this->authFailed();
-		}
+		// 	$this->authFailed();
+		// }
 		//调用token类验证
+		$token = $this->auth;
 		$tokenArray = \Org\Util\BoxTokenHelper::verifyToken($token);
 		if($tokenArray == false){
 	
