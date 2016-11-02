@@ -388,11 +388,16 @@ public function submit(){
 	$psa = D('pitch_sub_activity');
 	$pa = D('pitch_activity');
 	$id = $this->checkNotEmptyAndGetParam('id');
+
 	$pitchData = $psa->where("activity_id=$id")->select();
+	/*
 	foreach ($pitchData as $key => $pitch) {
 		# code...
 		$this->pitchassign($pitch);
-	}
+	}*/
+	import("Shabby/controler");
+	$control=New \Shabby\_controler($id,$pitchData);
+	$control->main();
 	$data['assigned'] = 1; 
 	$pa->where("id=$id")->save($data);
 	$this->successWithEmptyData();
